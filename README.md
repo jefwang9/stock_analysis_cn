@@ -72,6 +72,12 @@ python examples/example_realtime.py   # 实时数据分析
 
 # 测试API功能
 python test_api.py
+
+# 端口管理工具
+python port_check.py                    # 检查常用端口
+python port_check.py check 8080        # 检查指定端口
+python port_check.py kill 8080         # 清理指定端口
+python port_manager.py                 # 完整端口管理工具
 ```
 
 ### 3. 访问服务

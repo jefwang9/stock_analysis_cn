@@ -58,7 +58,10 @@ pip install -r requirements.txt
 ### 2. 运行程序
 
 ```bash
-# 使用主入口文件
+# 使用新的启动脚本（推荐）
+python start.py
+
+# 或使用主入口文件
 python main.py
 
 # 或直接运行特定模块
@@ -66,6 +69,9 @@ python src/web/api_server.py      # 启动API服务器
 python src/web/web_app.py         # 启动Web界面
 python examples/example_historical.py  # 历史数据分析
 python examples/example_realtime.py   # 实时数据分析
+
+# 测试API功能
+python test_api.py
 ```
 
 ### 3. 访问服务

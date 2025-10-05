@@ -12,18 +12,18 @@ import json
 import logging
 
 # 导入API模块
-from .api_server import app as api_app
+from src.web.api_server import app as api_app
 
 logger = logging.getLogger(__name__)
 
 # 创建Web应用
 app = FastAPI(title="A股股票分析智能体Web界面")
 
-# 挂载API路由
-app.mount("/api", api_app)
+# 包含API路由
+app.include_router(api_app.router, prefix="/api")
 
 # 设置模板和静态文件
-templates = Jinja2Templates(directory="templates")
+templates = Jinja2Templates(directory="src/web/templates")
 
 # Web路由
 @app.get("/", response_class=HTMLResponse)

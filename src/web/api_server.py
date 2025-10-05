@@ -127,7 +127,7 @@ async def health_check():
     }
 
 # 历史数据API
-@app.get("/api/stocks")
+@app.get("/stocks")
 async def get_stock_list():
     """获取股票列表"""
     try:
@@ -146,7 +146,7 @@ async def get_stock_list():
         logger.error(f"获取股票列表失败: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.get("/api/sectors")
+@app.get("/sectors")
 async def get_sector_list():
     """获取板块列表"""
     try:
@@ -165,7 +165,7 @@ async def get_sector_list():
         logger.error(f"获取板块列表失败: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.post("/api/stocks/historical")
+@app.post("/stocks/historical")
 async def get_stock_historical_data(request: StockRequest):
     """获取股票历史数据"""
     try:
@@ -189,7 +189,7 @@ async def get_stock_historical_data(request: StockRequest):
         logger.error(f"获取股票历史数据失败: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.post("/api/sectors/historical")
+@app.post("/sectors/historical")
 async def get_sector_historical_data(request: SectorRequest):
     """获取板块历史数据"""
     try:
@@ -219,7 +219,7 @@ async def get_sector_historical_data(request: SectorRequest):
         raise HTTPException(status_code=500, detail=str(e))
 
 # 实时数据API
-@app.get("/api/market/overview")
+@app.get("/market/overview")
 async def get_market_overview():
     """获取市场概览"""
     try:
@@ -237,7 +237,7 @@ async def get_market_overview():
         logger.error(f"获取市场概览失败: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.get("/api/market/sectors/realtime")
+@app.get("/market/sectors/realtime")
 async def get_sector_realtime_data():
     """获取板块实时数据"""
     try:
@@ -255,7 +255,7 @@ async def get_sector_realtime_data():
         logger.error(f"获取板块实时数据失败: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.get("/api/market/hot-stocks")
+@app.get("/market/hot-stocks")
 async def get_hot_stocks(limit: int = 20):
     """获取热门股票"""
     try:
@@ -274,7 +274,7 @@ async def get_hot_stocks(limit: int = 20):
         logger.error(f"获取热门股票失败: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.get("/api/market/sector-ranking")
+@app.get("/market/sector-ranking")
 async def get_sector_ranking():
     """获取板块排名"""
     try:
@@ -294,7 +294,7 @@ async def get_sector_ranking():
         raise HTTPException(status_code=500, detail=str(e))
 
 # 舆情分析API
-@app.post("/api/sentiment/analyze")
+@app.post("/sentiment/analyze")
 async def analyze_sentiment(request: SentimentRequest):
     """分析舆情数据"""
     try:
@@ -316,7 +316,7 @@ async def analyze_sentiment(request: SentimentRequest):
         raise HTTPException(status_code=500, detail=str(e))
 
 # 预测API
-@app.post("/api/predict/sectors")
+@app.post("/predict/sectors")
 async def predict_sectors(request: PredictionRequest):
     """预测板块表现"""
     try:
@@ -370,7 +370,7 @@ async def predict_sectors(request: PredictionRequest):
         raise HTTPException(status_code=500, detail=str(e))
 
 # 回测API
-@app.post("/api/backtest/update")
+@app.post("/backtest/update")
 async def update_backtest(request: BacktestRequest):
     """更新回测数据"""
     try:
@@ -402,7 +402,7 @@ async def update_backtest(request: BacktestRequest):
         logger.error(f"更新回测数据失败: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.get("/api/backtest/performance")
+@app.get("/backtest/performance")
 async def get_backtest_performance(days: int = 30):
     """获取回测性能"""
     try:
@@ -422,7 +422,7 @@ async def get_backtest_performance(days: int = 30):
         raise HTTPException(status_code=500, detail=str(e))
 
 # 报表API
-@app.get("/api/reports/generate")
+@app.get("/reports/generate")
 async def generate_reports(period_days: int = 30):
     """生成分析报告"""
     try:
@@ -443,7 +443,7 @@ async def generate_reports(period_days: int = 30):
         raise HTTPException(status_code=500, detail=str(e))
 
 # 数据摘要API
-@app.get("/api/data/summary")
+@app.get("/data/summary")
 async def get_data_summary():
     """获取数据摘要"""
     try:
@@ -462,7 +462,7 @@ async def get_data_summary():
         raise HTTPException(status_code=500, detail=str(e))
 
 # 模型管理API
-@app.post("/api/models/train")
+@app.post("/models/train")
 async def train_models(background_tasks: BackgroundTasks):
     """训练预测模型"""
     try:

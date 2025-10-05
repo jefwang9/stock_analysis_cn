@@ -411,11 +411,11 @@ class RealtimeDataCollector:
                 index_info = index_data[index_data['名称'] == index_name]
                 if not index_info.empty:
                     market_overview[index_name] = {
-                        'current_price': index_info['最新价'].iloc[0],
-                        'change_pct': index_info['涨跌幅'].iloc[0],
-                        'change_amount': index_info['涨跌额'].iloc[0],
-                        'volume': index_info['成交量'].iloc[0],
-                        'amount': index_info['成交额'].iloc[0]
+                        'current_price': float(index_info['最新价'].iloc[0]),
+                        'change_pct': float(index_info['涨跌幅'].iloc[0]),
+                        'change_amount': float(index_info['涨跌额'].iloc[0]),
+                        'volume': float(index_info['成交量'].iloc[0]),
+                        'amount': float(index_info['成交额'].iloc[0])
                     }
             
             # 获取市场统计 - 使用指数数据估算，避免获取所有股票
@@ -427,9 +427,9 @@ class RealtimeDataCollector:
                     'falling_stocks': 0,
                     'limit_up': 0,
                     'limit_down': 0,
-                    'avg_change_pct': 0,
-                    'total_volume': 0,
-                    'total_amount': 0
+                    'avg_change_pct': 0.0,
+                    'total_volume': 0.0,
+                    'total_amount': 0.0
                 }
                 
                 # 如果有指数数据，使用指数涨跌幅作为市场整体表现
@@ -446,9 +446,9 @@ class RealtimeDataCollector:
                     'falling_stocks': 0,
                     'limit_up': 0,
                     'limit_down': 0,
-                    'avg_change_pct': 0,
-                    'total_volume': 0,
-                    'total_amount': 0
+                    'avg_change_pct': 0.0,
+                    'total_volume': 0.0,
+                    'total_amount': 0.0
                 }
             
             return {

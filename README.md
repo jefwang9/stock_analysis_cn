@@ -72,15 +72,23 @@ python examples/example_realtime.py   # 实时数据分析
 
 # 测试API功能
 python test_api.py
-
-# 端口管理工具
-python port_check.py                    # 检查常用端口
-python port_check.py check 8080        # 检查指定端口
-python port_check.py kill 8080         # 清理指定端口
-python port_manager.py                 # 完整端口管理工具
 ```
 
-### 3. 访问服务
+### 4. 端口管理
+
+如果遇到端口占用问题，可以使用以下命令：
+
+```bash
+# 查看端口占用
+lsof -i :8080
+lsof -i :8000
+
+# 杀死占用端口的进程
+lsof -ti :8080 | xargs kill -9
+lsof -ti :8000 | xargs kill -9
+```
+
+### 5. 访问服务
 
 - **API服务器**: http://localhost:8000
 - **Web界面**: http://localhost:8080

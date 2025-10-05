@@ -1,0 +1,17 @@
+# A股股票分析智能体环境配置示例
+# 复制此文件为 .env 并填入相应的配置
+
+# Tushare token (可选，用于获取更多数据)
+TUSHARE_TOKEN=your_tushare_token_here
+
+# Redis配置
+REDIS_URL=redis://localhost:6379/0
+
+# 雪球API配置（如需要）
+XUEQIU_API_URL=https://xueqiu.com/
+
+# 日志级别
+LOG_LEVEL=INFO
+
+# 数据库配置
+SQLITE_PATH=data/trading_agent.db

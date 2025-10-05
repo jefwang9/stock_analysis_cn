@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A股股票分析智能体</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.css" rel="stylesheet">
+    <style>
+        .navbar-brand {
+            font-weight: bold;
+            color: #007bff !important;
+        }
+        .card {
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            border: 1px solid rgba(0, 0, 0, 0.125);
+        }
+        .card-header {
+            background-color: #f8f9fa;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+        }
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 5px;
+        }
+        .status-healthy {
+            background-color: #28a745;
+        }
+        .status-error {
+            background-color: #dc3545;
+        }
+        .loading {
+            text-align: center;
+            padding: 20px;
+        }
+        .error-message {
+            color: #dc3545;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 0.25rem;
+            padding: 0.75rem 1.25rem;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="/">A股股票分析智能体</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/dashboard">仪表板</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/stocks">股票</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/sectors">板块</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/predictions">预测</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/reports">报表</a>
+                    </li>
+                </ul>
+                <span class="navbar-text">
+                    <span id="status-indicator" class="status-indicator status-healthy"></span>
+                    <span id="status-text">系统正常</span>
+                </span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主要内容 -->
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">系统概览</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="card text-center">
+                                    <div class="card-body">
+                                        <h5 class="card-title">股票数量</h5>
+                                        <h3 class="text-primary" id="stock-count">-</h3>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card text-center">
+                                    <div class="card-body">
+                                        <h5 class="card-title">板块数量</h5>
+                                        <h3 class="text-success" id="sector-count">-</h3>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card text-center">
+                                    <div class="card-body">
+                                        <h5 class="card-title">历史记录</h5>
+                                        <h3 class="text-info" id="daily-records">-</h3>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card text-center">
+                                    <div class="card-body">
+                                        <h5 class="card-title">最后更新</h5>
+                                        <small class="text-muted" id="last-update">-</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">市场概览</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="market-overview">
+                            <div class="loading">正在加载市场数据...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">热门股票</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="hot-stocks">
+                            <div class="loading">正在加载热门股票...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">板块排名</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="sector-ranking">
+                            <div class="loading">正在加载板块排名...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 脚本 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.js"></script>
+    <script>
+        // 检查系统状态
+        async function checkSystemStatus() {
+            try {
+                const response = await fetch('/api/health');
+                const data = await response.json();
+                
+                const statusIndicator = document.getElementById('status-indicator');
+                const statusText = document.getElementById('status-text');
+                
+                if (data.status === 'healthy') {
+                    statusIndicator.className = 'status-indicator status-healthy';
+                    statusText.textContent = '系统正常';
+                } else {
+                    statusIndicator.className = 'status-indicator status-error';
+                    statusText.textContent = '系统异常';
+                }
+            } catch (error) {
+                const statusIndicator = document.getElementById('status-indicator');
+                const statusText = document.getElementById('status-text');
+                statusIndicator.className = 'status-indicator status-error';
+                statusText.textContent = '连接失败';
+            }
+        }
+
+        // 加载数据摘要
+        async function loadDataSummary() {
+            try {
+                const response = await fetch('/api/data/summary');
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    const summary = data.summary;
+                    document.getElementById('stock-count').textContent = summary.stock_count || 0;
+                    document.getElementById('sector-count').textContent = summary.sector_count || 0;
+                    document.getElementById('daily-records').textContent = summary.daily_records || 0;
+                    document.getElementById('last-update').textContent = summary.last_update || '-';
+                }
+            } catch (error) {
+                console.error('加载数据摘要失败:', error);
+            }
+        }
+
+        // 加载市场概览
+        async function loadMarketOverview() {
+            try {
+                const response = await fetch('/api/market/overview');
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    const marketData = data.data;
+                    const overviewDiv = document.getElementById('market-overview');
+                    
+                    let html = '<div class="row">';
+                    
+                    // 显示主要指数
+                    if (marketData.indices) {
+                        for (const [indexName, indexData] of Object.entries(marketData.indices)) {
+                            const changeClass = indexData.change_pct >= 0 ? 'text-success' : 'text-danger';
+                            html += `
+                                <div class="col-md-6 mb-2">
+                                    <div class="d-flex justify-content-between">
+                                        <span>${indexName}</span>
+                                        <span class="${changeClass}">
+                                            ${indexData.current_price.toFixed(2)} 
+                                            (${indexData.change_pct >= 0 ? '+' : ''}${indexData.change_pct.toFixed(2)}%)
+                                        </span>
+                                    </div>
+                                </div>
+                            `;
+                        }
+                    }
+                    
+                    // 显示市场统计
+                    if (marketData.market_stats) {
+                        const stats = marketData.market_stats;
+                        html += `
+                            <div class="col-12 mt-3">
+                                <h6>市场统计</h6>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <small>总股票: ${stats.total_stocks || 0}</small>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <small>上涨: ${stats.rising_stocks || 0}</small>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <small>下跌: ${stats.falling_stocks || 0}</small>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <small>涨停: ${stats.limit_up || 0}</small>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }
+                    
+                    html += '</div>';
+                    overviewDiv.innerHTML = html;
+                } else {
+                    document.getElementById('market-overview').innerHTML = 
+                        '<div class="error-message">加载市场概览失败</div>';
+                }
+            } catch (error) {
+                console.error('加载市场概览失败:', error);
+                document.getElementById('market-overview').innerHTML = 
+                    '<div class="error-message">加载市场概览失败</div>';
+            }
+        }
+
+        // 加载热门股票
+        async function loadHotStocks() {
+            try {
+                const response = await fetch('/api/market/hot-stocks?limit=10');
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    const hotStocks = data.data;
+                    const hotStocksDiv = document.getElementById('hot-stocks');
+                    
+                    let html = '<div class="table-responsive"><table class="table table-sm">';
+                    html += '<thead><tr><th>排名</th><th>股票</th><th>价格</th><th>涨跌幅</th></tr></thead><tbody>';
+                    
+                    hotStocks.forEach(stock => {
+                        const changeClass = stock.change_pct >= 0 ? 'text-success' : 'text-danger';
+                        html += `
+                            <tr>
+                                <td>${stock.rank}</td>
+                                <td>${stock.stock_name}(${stock.stock_code})</td>
+                                <td>${stock.current_price.toFixed(2)}</td>
+                                <td class="${changeClass}">
+                                    ${stock.change_pct >= 0 ? '+' : ''}${stock.change_pct.toFixed(2)}%
+                                </td>
+                            </tr>
+                        `;
+                    });
+                    
+                    html += '</tbody></table></div>';
+                    hotStocksDiv.innerHTML = html;
+                } else {
+                    document.getElementById('hot-stocks').innerHTML = 
+                        '<div class="error-message">加载热门股票失败</div>';
+                }
+            } catch (error) {
+                console.error('加载热门股票失败:', error);
+                document.getElementById('hot-stocks').innerHTML = 
+                    '<div class="error-message">加载热门股票失败</div>';
+            }
+        }
+
+        // 加载板块排名
+        async function loadSectorRanking() {
+            try {
+                const response = await fetch('/api/market/sector-ranking');
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    const ranking = data.data;
+                    const rankingDiv = document.getElementById('sector-ranking');
+                    
+                    let html = '<div class="table-responsive"><table class="table table-sm">';
+                    html += '<thead><tr><th>排名</th><th>板块</th><th>涨跌幅</th><th>上涨股票</th><th>下跌股票</th><th>情绪</th></tr></thead><tbody>';
+                    
+                    ranking.slice(0, 15).forEach(sector => {
+                        const changeClass = sector.avg_change_pct >= 0 ? 'text-success' : 'text-danger';
+                        html += `
+                            <tr>
+                                <td>${sector.rank}</td>
+                                <td>${sector.sector}</td>
+                                <td class="${changeClass}">
+                                    ${sector.avg_change_pct >= 0 ? '+' : ''}${sector.avg_change_pct.toFixed(2)}%
+                                </td>
+                                <td>${sector.rising_count}</td>
+                                <td>${sector.falling_count}</td>
+                                <td><span class="badge bg-secondary">${sector.market_sentiment}</span></td>
+                            </tr>
+                        `;
+                    });
+                    
+                    html += '</tbody></table></div>';
+                    rankingDiv.innerHTML = html;
+                } else {
+                    document.getElementById('sector-ranking').innerHTML = 
+                        '<div class="error-message">加载板块排名失败</div>';
+                }
+            } catch (error) {
+                console.error('加载板块排名失败:', error);
+                document.getElementById('sector-ranking').innerHTML = 
+                    '<div class="error-message">加载板块排名失败</div>';
+            }
+        }
+
+        // 页面加载完成后执行
+        document.addEventListener('DOMContentLoaded', function() {
+            checkSystemStatus();
+            loadDataSummary();
+            loadMarketOverview();
+            loadHotStocks();
+            loadSectorRanking();
+            
+            // 每30秒刷新一次数据
+            setInterval(() => {
+                checkSystemStatus();
+                loadMarketOverview();
+                loadHotStocks();
+                loadSectorRanking();
+            }, 30000);
+        });
+    </script>
+</body>
+</html>

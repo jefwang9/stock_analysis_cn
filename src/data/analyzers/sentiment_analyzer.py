@@ -13,7 +13,7 @@ from bs4 import BeautifulSoup
 import jieba
 from snownlp import SnowNLP
 import logging
-from config import settings
+from src.core.config import settings
 from urllib.parse import urlencode, quote
 
 logger = logging.getLogger(__name__)

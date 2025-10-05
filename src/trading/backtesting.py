@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 from typing import List, Dict, Tuple, Any, Optional
 import sqlite3
 import logging
-from config import settings
+from src.core.config import settings
 
 logger = logging.getLogger(__name__)
 

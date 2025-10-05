@@ -13,7 +13,7 @@ import aiohttp
 from datetime import datetime, timedelta
 from typing import List, Dict, Optional, Any, Tuple
 import logging
-from config import settings
+from src.core.config import settings
 import threading
 from queue import Queue
 import redis

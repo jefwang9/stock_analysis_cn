@@ -9,7 +9,7 @@ from datetime import datetime, timedelta
 from typing import List, Dict, Optional, Any
 import time
 import logging
-from config import settings
+from src.core.config import settings
 
 logger = logging.getLogger(__name__)
 

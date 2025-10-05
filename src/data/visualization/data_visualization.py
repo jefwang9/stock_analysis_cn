@@ -12,7 +12,7 @@ from plotly.subplots import make_subplots
 from datetime import datetime, timedelta
 from typing import List, Dict, Any, Optional, Tuple
 import logging
-from config import settings
+from src.core.config import settings
 
 # 设置中文字体
 plt.rcParams['font.sans-serif'] = ['SimHei', 'Arial Unicode MS', 'DejaVu Sans']

@@ -12,7 +12,7 @@ from openpyxl import Workbook
 from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 from openpyxl.utils.dataframe import dataframe_to_rows
 import logging
-from config import settings
+from src.core.config import settings
 
 logger = logging.getLogger(__name__)
 

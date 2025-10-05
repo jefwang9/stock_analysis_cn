@@ -13,14 +13,14 @@ from threading import Thread
 import asyncio
 
 # 导入自定义模块
-from config import settings
-from data_collector import StockDataCollector, get_main_sectors_data
-from historical_data import HistoricalDataCollector, get_stock_historical_data, get_sector_historical_data
-from realtime_data import RealtimeDataCollector, get_market_overview, get_sector_realtime_data
-from sentiment_analyzer import SentimentAnalyzer, analyze_all_sectors_sentiment
-from sector_prediction import SectorPredictionModel, prepare_sector_features
-from backtesting import Backtester, daily_backtest_update
-from report_generator import ReportGenerator, generate_comprehensive_report
+from src.core.config import settings
+from src.data.collectors.data_collector import StockDataCollector, get_main_sectors_data
+from src.data.collectors.historical_data import HistoricalDataCollector, get_stock_historical_data, get_sector_historical_data
+from src.data.collectors.realtime_data import RealtimeDataCollector, get_market_overview, get_sector_realtime_data
+from src.data.analyzers.sentiment_analyzer import SentimentAnalyzer, analyze_all_sectors_sentiment
+from src.models.sector_prediction import SectorPredictionModel, prepare_sector_features
+from src.trading.backtesting import Backtester, daily_backtest_update
+from src.trading.report_generator import ReportGenerator, generate_comprehensive_report
 
 # 配置日志
 logging.basicConfig(

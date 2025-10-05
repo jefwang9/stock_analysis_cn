@@ -13,13 +13,13 @@ from contextlib import asynccontextmanager
 import pandas as pd
 
 # 导入自定义模块
-from config import settings
-from historical_data import HistoricalDataCollector, get_stock_historical_data, get_sector_historical_data
-from realtime_data import RealtimeDataCollector, get_market_overview, get_sector_realtime_data
-from sentiment_analyzer import SentimentAnalyzer
-from sector_prediction_fixed import SectorPredictionModel, prepare_sector_features, train_all_sector_models
-from backtesting import Backtester
-from report_generator import ReportGenerator
+from src.core.config import settings
+from src.data.collectors.historical_data import HistoricalDataCollector, get_stock_historical_data, get_sector_historical_data
+from src.data.collectors.realtime_data import RealtimeDataCollector, get_market_overview, get_sector_realtime_data
+from src.data.analyzers.sentiment_analyzer import SentimentAnalyzer
+from src.models.sector_prediction_fixed import SectorPredictionModel, prepare_sector_features, train_all_sector_models
+from src.trading.backtesting import Backtester
+from src.trading.report_generator import ReportGenerator
 
 logger = logging.getLogger(__name__)
 

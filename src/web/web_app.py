@@ -12,7 +12,7 @@ import json
 import logging
 
 # 导入API模块
-from api_server import app as api_app
+from .api_server import app as api_app
 
 logger = logging.getLogger(__name__)
 

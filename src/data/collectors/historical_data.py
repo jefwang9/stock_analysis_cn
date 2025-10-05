@@ -14,7 +14,7 @@ import logging
 from pathlib import Path
 import time
 import pickle
-from config import settings
+from src.core.config import settings
 
 logger = logging.getLogger(__name__)
 

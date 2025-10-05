@@ -11,6 +11,9 @@ class DatabaseConfig(BaseSettings):
     sqlite_path: str = "data/trading_agent.db"
     redis_url: str = "redis://localhost:6379/0"
     
+    class Config:
+        extra = "ignore"
+    
 class DataSourceConfig(BaseSettings):
     """数据源配置"""
     # AKShare支持的数据源
@@ -23,6 +26,9 @@ class DataSourceConfig(BaseSettings):
     request_timeout: int = 30
     request_delay: float = 1.0  # 请求间隔，避免被封
     max_retries: int = 3
+    
+    class Config:
+        extra = "ignore"
     
 class SentimentSourceConfig(BaseSettings):
     """舆情数据源配置"""
@@ -40,6 +46,9 @@ class SentimentSourceConfig(BaseSettings):
     
     # 微博
     weibo_url: str = "https://s.weibo.com/"
+    
+    class Config:
+        extra = "ignore"
     
 class ModelConfig(BaseSettings):
     """模型配置"""
@@ -61,6 +70,9 @@ class ModelConfig(BaseSettings):
     validation_ratio: float = 0.1
     test_ratio: float = 0.1
     
+    class Config:
+        extra = "ignore"
+    
 class TradingConfig(BaseSettings):
     """交易配置"""
     # 交易时间
@@ -77,6 +89,9 @@ class TradingConfig(BaseSettings):
     # 预测配置
     predict_top_n: int = 3  # 预测前N个上涨板块
     predict_bottom_n: int = 3  # 预测前N个下跌板块
+    
+    class Config:
+        extra = "ignore"
 
 class LoggingConfig(BaseSettings):
     """日志配置"""
@@ -84,6 +99,9 @@ class LoggingConfig(BaseSettings):
     log_file: str = "logs/trading_agent.log"
     max_log_size: str = "10MB"
     log_rotation: str = "1 day"
+    
+    class Config:
+        extra = "ignore"
 
 class Settings(BaseSettings):
     """主配置类"""
@@ -108,6 +126,7 @@ class Settings(BaseSettings):
         env_file = ".env"
         env_file_encoding = 'utf-8'
         case_sensitive = False
+        extra = "ignore"
 
 # 创建全局配置实例
 settings = Settings()

@@ -15,7 +15,8 @@ import pandas as pd
 # 导入自定义模块
 from src.core.config import settings
 from src.data.collectors.historical_data import HistoricalDataCollector, get_stock_historical_data, get_sector_historical_data
-from src.data.collectors.realtime_data import RealtimeDataCollector, get_market_overview, get_sector_realtime_data
+# 实时数据功能已屏蔽 - 专注于板块预测模型
+# from src.data.collectors.realtime_data import RealtimeDataCollector, get_market_overview, get_sector_realtime_data
 from src.data.analyzers.sentiment_analyzer import SentimentAnalyzer
 from src.models.sector_prediction_fixed import SectorPredictionModel, prepare_sector_features, train_all_sector_models
 from src.trading.backtesting import Backtester
@@ -25,7 +26,7 @@ logger = logging.getLogger(__name__)
 
 # 全局变量
 historical_collector = None
-realtime_collector = None
+# realtime_collector = None  # 实时数据功能已屏蔽
 sentiment_analyzer = None
 prediction_model = None
 backtester = None
@@ -34,14 +35,14 @@ report_generator = None
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """应用生命周期管理"""
-    global historical_collector, realtime_collector, sentiment_analyzer, prediction_model, backtester, report_generator
+    global historical_collector, sentiment_analyzer, prediction_model, backtester, report_generator
     
     # 启动时初始化
     logger.info("正在初始化A股股票分析智能体...")
     
     try:
         historical_collector = HistoricalDataCollector()
-        realtime_collector = RealtimeDataCollector()
+        # realtime_collector = RealtimeDataCollector()  # 实时数据功能已屏蔽
         sentiment_analyzer = SentimentAnalyzer()
         prediction_model = SectorPredictionModel()
         backtester = Backtester()
@@ -118,7 +119,7 @@ async def health_check():
         "timestamp": datetime.now(),
         "components": {
             "historical_collector": historical_collector is not None,
-            "realtime_collector": realtime_collector is not None,
+            # "realtime_collector": False,  # 实时数据功能已屏蔽
             "sentiment_analyzer": sentiment_analyzer is not None,
             "prediction_model": prediction_model is not None,
             "backtester": backtester is not None,
@@ -218,80 +219,80 @@ async def get_sector_historical_data(request: SectorRequest):
         logger.error(f"获取板块历史数据失败: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
-# 实时数据API
-@app.get("/market/overview")
-async def get_market_overview():
-    """获取市场概览"""
-    try:
-        if not realtime_collector:
-            raise HTTPException(status_code=500, detail="实时数据收集器未初始化")
-        
-        market_data = realtime_collector.get_market_overview()
-        
-        return {
-            "status": "success",
-            "data": market_data,
-            "timestamp": datetime.now()
-        }
-    except Exception as e:
-        logger.error(f"获取市场概览失败: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+# 实时数据API - 已屏蔽，专注于板块预测模型
+# @app.get("/market/overview")
+# async def get_market_overview():
+#     """获取市场概览"""
+#     try:
+#         if not realtime_collector:
+#             raise HTTPException(status_code=500, detail="实时数据收集器未初始化")
+#         
+#         market_data = realtime_collector.get_market_overview()
+#         
+#         return {
+#             "status": "success",
+#             "data": market_data,
+#             "timestamp": datetime.now()
+#         }
+#     except Exception as e:
+#         logger.error(f"获取市场概览失败: {e}")
+#         raise HTTPException(status_code=500, detail=str(e))
 
-@app.get("/market/sectors/realtime")
-async def get_sector_realtime_data():
-    """获取板块实时数据"""
-    try:
-        if not realtime_collector:
-            raise HTTPException(status_code=500, detail="实时数据收集器未初始化")
-        
-        sector_data = realtime_collector.get_sector_realtime_data()
-        
-        return {
-            "status": "success",
-            "data": sector_data,
-            "timestamp": datetime.now()
-        }
-    except Exception as e:
-        logger.error(f"获取板块实时数据失败: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+# @app.get("/market/sectors/realtime")
+# async def get_sector_realtime_data():
+#     """获取板块实时数据"""
+#     try:
+#         if not realtime_collector:
+#             raise HTTPException(status_code=500, detail="实时数据收集器未初始化")
+#         
+#         sector_data = realtime_collector.get_sector_realtime_data()
+#         
+#         return {
+#             "status": "success",
+#             "data": sector_data,
+#             "timestamp": datetime.now()
+#         }
+#     except Exception as e:
+#         logger.error(f"获取板块实时数据失败: {e}")
+#         raise HTTPException(status_code=500, detail=str(e))
 
-@app.get("/market/hot-stocks")
-async def get_hot_stocks(limit: int = 20):
-    """获取热门股票"""
-    try:
-        if not realtime_collector:
-            raise HTTPException(status_code=500, detail="实时数据收集器未初始化")
-        
-        hot_stocks = realtime_collector.get_hot_stocks(limit)
-        
-        return {
-            "status": "success",
-            "data": hot_stocks.to_dict('records') if not hot_stocks.empty else [],
-            "count": len(hot_stocks),
-            "timestamp": datetime.now()
-        }
-    except Exception as e:
-        logger.error(f"获取热门股票失败: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+# @app.get("/market/hot-stocks")
+# async def get_hot_stocks(limit: int = 20):
+#     """获取热门股票"""
+#     try:
+#         if not realtime_collector:
+#             raise HTTPException(status_code=500, detail="实时数据收集器未初始化")
+#         
+#         hot_stocks = realtime_collector.get_hot_stocks(limit)
+#         
+#         return {
+#             "status": "success",
+#             "data": hot_stocks.to_dict('records') if not hot_stocks.empty else [],
+#             "count": len(hot_stocks),
+#             "timestamp": datetime.now()
+#         }
+#     except Exception as e:
+#         logger.error(f"获取热门股票失败: {e}")
+#         raise HTTPException(status_code=500, detail=str(e))
 
-@app.get("/market/sector-ranking")
-async def get_sector_ranking():
-    """获取板块排名"""
-    try:
-        if not realtime_collector:
-            raise HTTPException(status_code=500, detail="实时数据收集器未初始化")
-        
-        ranking = realtime_collector.get_sector_ranking()
-        
-        return {
-            "status": "success",
-            "data": ranking.to_dict('records') if not ranking.empty else [],
-            "count": len(ranking),
-            "timestamp": datetime.now()
-        }
-    except Exception as e:
-        logger.error(f"获取板块排名失败: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+# @app.get("/market/sector-ranking")
+# async def get_sector_ranking():
+#     """获取板块排名"""
+#     try:
+#         if not realtime_collector:
+#             raise HTTPException(status_code=500, detail="实时数据收集器未初始化")
+#         
+#         ranking = realtime_collector.get_sector_ranking()
+#         
+#         return {
+#             "status": "success",
+#             "data": ranking.to_dict('records') if not ranking.empty else [],
+#             "count": len(ranking),
+#             "timestamp": datetime.now()
+#         }
+#     except Exception as e:
+#         logger.error(f"获取板块排名失败: {e}")
+#         raise HTTPException(status_code=500, detail=str(e))
 
 # 舆情分析API
 @app.post("/sentiment/analyze")
@@ -315,16 +316,57 @@ async def analyze_sentiment(request: SentimentRequest):
         logger.error(f"舆情分析失败: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
-# 预测API
-@app.post("/predict/sectors")
-async def predict_sectors(request: PredictionRequest):
-    """预测板块表现"""
+# 增强版板块预测API
+@app.post("/models/daily-training")
+async def run_daily_training(background_tasks: BackgroundTasks, target_date: str = None):
+    """运行每日收盘后训练"""
     try:
         if not prediction_model:
             raise HTTPException(status_code=500, detail="预测模型未初始化")
         
+        # 在后台运行训练
+        background_tasks.add_task(run_daily_training_background, target_date)
+        
+        return {
+            "status": "success",
+            "message": "每日训练已开始，请稍后查看结果",
+            "target_date": target_date or datetime.now().strftime('%Y-%m-%d'),
+            "timestamp": datetime.now()
+        }
+    except Exception as e:
+        logger.error(f"开始每日训练失败: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/models/performance")
+async def get_model_performance(days: int = 30):
+    """获取模型表现摘要"""
+    try:
+        if not prediction_model:
+            raise HTTPException(status_code=500, detail="预测模型未初始化")
+        
+        performance_summary = prediction_model.get_model_performance_summary(days)
+        
+        return {
+            "status": "success",
+            "data": performance_summary,
+            "timestamp": datetime.now()
+        }
+    except Exception as e:
+        logger.error(f"获取模型表现失败: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/models/predict-daily")
+async def predict_daily_sectors(target_date: str = None):
+    """预测指定日期的板块表现"""
+    try:
+        if not prediction_model:
+            raise HTTPException(status_code=500, detail="预测模型未初始化")
+        
+        if target_date is None:
+            target_date = (datetime.now() + timedelta(days=1)).strftime('%Y-%m-%d')
+        
         # 获取板块数据
-        sectors = request.sectors or settings.trading.sectors[:10]  # 限制前10个板块
+        sectors = settings.trading.sectors[:10]  # 限制前10个板块
         
         # 获取历史数据
         end_date = datetime.now().strftime('%Y-%m-%d')
@@ -343,15 +385,12 @@ async def predict_sectors(request: PredictionRequest):
         if not sectors_data:
             raise HTTPException(status_code=400, detail="没有可用的板块数据")
         
-        # 获取舆情数据（如果请求）
+        # 获取舆情数据
         sentiment_data = None
-        if request.include_sentiment:
-            try:
-                sentiment_data = sentiment_analyzer.collect_all_sentiment_data(
-                    [], [], days=7
-                )
-            except Exception as e:
-                logger.warning(f"获取舆情数据失败: {e}")
+        try:
+            sentiment_data = sentiment_analyzer.collect_all_sentiment_data([], [], days=7)
+        except Exception as e:
+            logger.warning(f"获取舆情数据失败: {e}")
         
         # 准备特征数据
         all_features = prepare_sector_features(sectors_data, sentiment_data or pd.DataFrame())
@@ -359,15 +398,40 @@ async def predict_sectors(request: PredictionRequest):
         # 进行预测
         predictions_df = prediction_model.predict_all_sectors(all_features)
         
+        # 记录预测结果
+        for _, row in predictions_df.iterrows():
+            prediction_model.record_prediction_performance(
+                date=target_date,
+                sector=row['sector'],
+                prediction=row['predicted_change'],
+                confidence=row.get('confidence', 0.0)
+            )
+        
         return {
             "status": "success",
+            "target_date": target_date,
             "data": predictions_df.to_dict('records'),
             "count": len(predictions_df),
             "timestamp": datetime.now()
         }
     except Exception as e:
-        logger.error(f"板块预测失败: {e}")
+        logger.error(f"预测板块表现失败: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+async def run_daily_training_background(target_date: str = None):
+    """后台运行每日训练"""
+    try:
+        logger.info("开始后台每日训练...")
+        
+        result = prediction_model.daily_training_pipeline(target_date)
+        
+        if result.get('status') == 'success':
+            logger.info(f"每日训练完成: {result['summary']}")
+        else:
+            logger.error(f"每日训练失败: {result.get('message')}")
+            
+    except Exception as e:
+        logger.error(f"后台每日训练失败: {e}")
 
 # 回测API
 @app.post("/backtest/update")
